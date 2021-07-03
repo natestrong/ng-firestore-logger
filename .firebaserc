@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "node-firestore-logger": {
+      "hosting": {
+        "ng-firestore-logger": [
+          "node-firestore-logger"
+        ]
+      }
+    }
+  }
+}
