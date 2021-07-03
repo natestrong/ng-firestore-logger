@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {AngularFirestore} from "@angular/fire/firestore";
 
 @Component({
   selector: 'app-root',
@@ -8,14 +7,13 @@ import {AngularFirestore} from "@angular/fire/firestore";
       <mat-icon>local_fire_department</mat-icon>
       <span>My Super App</span>
     </mat-toolbar>
+    <div class="spacer"></div>
     <router-outlet></router-outlet>
   `,
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  
-  constructor(
-    private store: AngularFirestore
-  ) {
+
+  constructor() {
   }
 }
