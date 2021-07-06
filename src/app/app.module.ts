@@ -23,6 +23,11 @@ import {MatChipsModule} from "@angular/material/chips";
 import {TwitterFollowerDialog} from "./home/users/twitter-follower-dialog/twitter-follower-dialog";
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from "@angular/material/dialog";
 
+import {USE_EMULATOR as USE_AUTH_EMULATOR} from '@angular/fire/auth';
+import {USE_EMULATOR as USE_DATABASE_EMULATOR} from '@angular/fire/database';
+import {USE_EMULATOR as USE_FIRESTORE_EMULATOR} from '@angular/fire/firestore';
+import {USE_EMULATOR as USE_FUNCTIONS_EMULATOR} from '@angular/fire/functions';
+
 @NgModule({
   declarations: [
     ActionsComponent,
@@ -56,7 +61,13 @@ import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from "@angular/material/dia
     MatTableModule,
     MatChipsModule,
   ],
-  providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true, maxHeight: '75vh'}}],
+  providers: [
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true, maxHeight: '75vh'}},
+    {provide: USE_AUTH_EMULATOR, useValue: environment.useEmulators ? ['localhost', 9099] : undefined},
+    {provide: USE_DATABASE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 9000] : undefined},
+    {provide: USE_FIRESTORE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 8080] : undefined},
+    {provide: USE_FUNCTIONS_EMULATOR, useValue: environment.useEmulators ? ['localhost', 5001] : undefined},
+  ],
   bootstrap: [AppComponent],
   entryComponents: [TwitterFollowerDialog]
 })
