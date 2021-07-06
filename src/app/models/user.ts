@@ -9,6 +9,7 @@ export interface User {
   birthday: Date | Timestamp,
   profession: string,
   favoriteAnimal: string,
+  twitterFollowerCount: number,
 }
 
 export interface TwitterUser {

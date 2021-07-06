@@ -7,6 +7,7 @@ import {first} from "rxjs/operators";
 import firebase from "firebase";
 import CollectionReference = firebase.firestore.CollectionReference;
 import * as _ from "lodash";
+import {Memoize} from "../utils";
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,7 @@ export class DbService {
       .valueChanges() as Observable<User[]>;
   }
 
+  @Memoize()
   getTwitterFollowers$(id: string): Observable<TwitterUser[]> {
     return this.store
       .collection('users')
@@ -95,8 +97,22 @@ export class DbService {
     return users;
   }
 
-  updateRandomUsers(amount: number) {
-    //
+  async updateRandomUsers(amount: number) {
+    const users = await this.users$.pipe(first()).toPromise();
+    const randomUsers = this.chance.pickset(users, amount);
+    const batch = this.store.firestore.batch();
+    const usersRef = this.store.firestore.collection('users');
+    randomUsers.forEach(user => {
+      const userRef = usersRef.doc(user.id);
+      batch.update(userRef, {profession: this.chance.profession()});
+      if (this.chance.bool()) {
+        batch.update(userRef, {favoriteAnimal: this.chance.animal()});
+      }
+    });
+
+    batch.commit()
+      .then(() => console.log(`Batch updated ${amount} user(s)`))
+      .catch(console.warn);
   }
 
   async deleteUsers(amount: number) {

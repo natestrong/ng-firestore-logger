@@ -33,16 +33,13 @@ type Action = 'Create' | 'Update' | 'Delete';
   styleUrls: ['./actions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsComponent implements OnInit {
+export class ActionsComponent {
   actions: Action[] = ['Create', 'Update', 'Delete'];
   increments: number[] = [1, 10, 100, 500];
 
   constructor(
     private db: DbService
   ) {
-  }
-
-  ngOnInit(): void {
   }
 
   onAction(action: Action, amount: number) {
