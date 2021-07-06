@@ -1,0 +1,39 @@
+@import '~@angular/material/theming';
+
+.action-container {
+  padding: 20px;
+  border-radius: 10px;
+  @include mat-elevation(1);
+
+  mat-card {
+    padding-bottom: 0;
+
+    display: inline-block;
+    @include mat-elevation(3);
+
+    &:hover {
+      @include mat-elevation(5);
+    }
+
+    .button-row {
+      margin: 16px;
+
+      span {
+        width: 75px;
+        font-size: large;
+      }
+
+      button {
+        &:hover {
+          @include mat-elevation(10);
+        }
+      }
+    }
+  }
+
+  mat-divider {
+    margin: -8px;
+    width: calc(100% - 20px);
+    left: 17px;
+  }
+}
