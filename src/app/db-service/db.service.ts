@@ -86,7 +86,7 @@ export class DbService {
 
   private generateTwitterFollowers(): TwitterUser[] {
     const users: TwitterUser[] = [];
-    const randomFollowerAmount = Math.floor(Math.random() * 200);
+    const randomFollowerAmount = Math.min(Math.floor(Math.random() * 200), Math.floor(Math.random() * 200));
     for (let i = 0; i < randomFollowerAmount; i++) {
       users.push({
         id: this.store.createId(),
