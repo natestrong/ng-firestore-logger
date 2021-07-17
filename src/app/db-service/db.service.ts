@@ -7,13 +7,14 @@ import {first} from "rxjs/operators";
 import firebase from "firebase";
 import * as _ from "lodash";
 import {Memoize} from "../utils";
+import WriteBatch = firebase.firestore.WriteBatch;
 
 @Injectable({
   providedIn: 'root'
 })
 export class DbService {
   public batchMode: boolean = false;
-  public batches: Promise<void>[] = [];
+  public batches: WriteBatch[] = [];
 
   private chance: Chance.Chance;
 
@@ -53,7 +54,7 @@ export class DbService {
 
     newUsers.forEach(user => batch.set(usersRef.doc(user.id), user));
 
-    await this.processBatches([batch.commit()]);      // todo - Should not commit batches here.  Should commit in the processBatch method
+    await this.processBatches([batch]);      // todo - Should not commit batches here.  Should commit in the processBatch method
     console.log(`Batch created ${amount} user(s)`);
 
     const newTwitterUsers: { docRef: DocumentReference<DocumentData>, twitterFollower: TwitterUser }[] = [];
@@ -70,7 +71,7 @@ export class DbService {
       .map(twitterUserBatch => {
         const tUBatch = this.store.firestore.batch();
         twitterUserBatch.forEach(tu => tUBatch.set(tu.docRef, tu.twitterFollower));
-        return tUBatch.commit();
+        return tUBatch;
       });
 
     await this.processBatches(batches);
@@ -104,7 +105,7 @@ export class DbService {
       }
     });
 
-    await this.processBatches([batch.commit()]);
+    await this.processBatches([batch]);
     console.log(`Batch updated ${amount} user(s)`);
   }
 
@@ -116,21 +117,26 @@ export class DbService {
     const usersToDelete = users.slice(-amount);
     usersToDelete.forEach(user => batch.delete(usersRef.doc(user.id)));
 
-    await this.processBatches([batch.commit()]);
+    await this.processBatches([batch]);
     console.log(`Batch deleted ${amount} user(s)`);
   }
 
-  private async processBatches(batches: Promise<void>[]) {
-    // if (this.batchMode) {
-    //   this.batches = this.batches.concat(batches);
-    //   return;
-    // }
+  private async processBatches(batches: WriteBatch[]) {
+    if (this.batchMode) {
+      this.batches = this.batches.concat(batches);
+      return;
+    }
 
-    // try {
-    //   await Promise.all([...batches, ...this.batches]);
-    //   this.batches = [];
-    // } catch (e) {
-    //   console.warn(e);
-    // }
+    try {
+      await Promise.all([...batches, ...this.batches].map(batch => batch.commit()));
+      this.batches = [];
+    } catch (e) {
+      console.warn(e);
+    }
+  }
+
+  completeBatchMode() {
+    this.batchMode = false;
+    this.processBatches([]);
   }
 }

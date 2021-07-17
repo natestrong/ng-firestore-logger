@@ -13,7 +13,7 @@ type Action = 'Create' | 'Update' | 'Delete';
         <mat-card-title fxLayout='row' fxLayoutAlign='space-between'>
             <span>Users</span>
             <button *ngIf="!db.batchMode" mat-raised-button (click)='onTurnOnBatchMode()'>Turn on Batch Mode</button>
-            <button *ngIf="db.batchMode" mat-raised-button color='accent' (click)='onTurnOnBatchMode()'>Commit {{db.batches.length}} Batches</button>
+            <button *ngIf="db.batchMode" mat-raised-button color='accent' (click)='onCompleteBatchMode()'>Commit {{db.batches.length}} Batches</button>
         </mat-card-title>
 
         <mat-card-content>
@@ -61,7 +61,11 @@ export class ActionsComponent {
     }
   }
 
-    onTurnOnBatchMode() {
-        this.db.batchMode = true;
-    }
+  onTurnOnBatchMode() {
+      this.db.batchMode = true;
+  }
+
+  onCompleteBatchMode() {
+    this.db.completeBatchMode();
+  }
 }
