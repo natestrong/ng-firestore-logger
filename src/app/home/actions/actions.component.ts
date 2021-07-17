@@ -10,7 +10,11 @@ type Action = 'Create' | 'Update' | 'Delete';
          fxLayoutGap="20px"
          class="action-container">
       <mat-card>
-        <mat-card-title>Users</mat-card-title>
+        <mat-card-title fxLayout='row' fxLayoutAlign='space-between'>
+            <span>Users</span>
+            <button mat-raised-button color='accent' (click)='onTurnOnBatchMode()'>Turn on Batch Mode</button>
+        </mat-card-title>
+          
         <mat-card-content>
           <div *ngFor="let action of actions; let i = index">
             <div fxLayoutGap="10px"
@@ -55,4 +59,8 @@ export class ActionsComponent {
         break;
     }
   }
+
+    onTurnOnBatchMode() {
+        this.db.batchMode = true;
+    }
 }
