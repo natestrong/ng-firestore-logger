@@ -12,9 +12,10 @@ type Action = 'Create' | 'Update' | 'Delete';
       <mat-card>
         <mat-card-title fxLayout='row' fxLayoutAlign='space-between'>
             <span>Users</span>
-            <button mat-raised-button color='accent' (click)='onTurnOnBatchMode()'>Turn on Batch Mode</button>
+            <button *ngIf="!db.batchMode" mat-raised-button (click)='onTurnOnBatchMode()'>Turn on Batch Mode</button>
+            <button *ngIf="db.batchMode" mat-raised-button color='accent' (click)='onTurnOnBatchMode()'>Commit {{db.batches.length}} Batches</button>
         </mat-card-title>
-          
+
         <mat-card-content>
           <div *ngFor="let action of actions; let i = index">
             <div fxLayoutGap="10px"
@@ -42,7 +43,7 @@ export class ActionsComponent {
   increments: number[] = [1, 10, 100, 500];
 
   constructor(
-    private db: DbService
+    public db: DbService
   ) {
   }
 
